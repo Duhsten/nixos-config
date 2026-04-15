@@ -51,6 +51,10 @@
   };
   networking.firewall.allowedTCPPorts = [ 22 ];
 
+  # --- bluetooth ---
+  hardware.bluetooth.enable = true;
+  services.blueman.enable = true;
+
   # --- audio ---
   # pipewire handles everything — alsa, pulse compat, the works
   security.rtkit.enable = true;
@@ -80,6 +84,16 @@
   # --- nixpkgs ---
   nixpkgs.config.allowUnfree = true;
 
+  # python 3.11 doc build is broken on nixos-unstable (sphinx/docutils incompatibility)
+  # google-cloud-sdk pulls it in — strip the doc output to unblock builds
+  nixpkgs.overlays = [
+    (final: prev: {
+      python311 = prev.python311.overrideAttrs (old: {
+        outputs = builtins.filter (o: o != "doc") (old.outputs or [ "out" "lib" ]);
+      });
+    })
+  ];
+
   # --- fonts ---
   fonts.packages = with pkgs; [
     noto-fonts
@@ -107,8 +121,21 @@
     wget
     curl
 
+    # python — withPackages gives a single env; add common libs here
+    # for project-specific deps use: python -m venv .venv && source .venv/bin/activate
+    (python3.withPackages (ps: with ps; [
+      pip setuptools wheel
+      requests
+      pyyaml
+      python-dotenv
+    ]))
+
     # desktop apps
     nautilus
+    nautilus-open-any-terminal  # right-click → open terminal
+    file-roller                 # archive support (zip, tar, etc.)
+    sushi                       # spacebar quick preview
+    gvfs                        # trash, network shares, mtp, smb
     ghostty
     vscode
     firefox        # fallback browser, zen is the daily driver
@@ -135,9 +162,12 @@
     google-cloud-sdk
     spotify
     pwvucontrol
-    blueman
-    bluez
+    gemini-cli
+    
   ];
+
+  # gvfs — virtual filesystem daemon for nautilus (trash, network, mtp, smb)
+  services.gvfs.enable = true;
 
   # steam — needs its own module, not just a package, for the fhs env to work right
   programs.steam.enable = true;
