@@ -44,7 +44,7 @@
       # pull latest changes from github before rebuilding on a machine
       cfg-pull = "git -C ~/nixos-config pull";
       # push your changes after editing the config
-      cfg-push = "git -C ~/nixos-config add -A && git -C ~/nixos-config commit -m \"update config\" && git -C ~/nixos-config push";
+      cfg-push = "cp ~/.config/DankMaterialShell/settings.json ~/nixos-config/home/configs/DankMaterialShell/settings.json && git -C ~/nixos-config add -A && git -C ~/nixos-config commit -m \"update config\" && git -C ~/nixos-config push";
       # nicer defaults
       ls  = "eza";
       ll  = "eza -l";
