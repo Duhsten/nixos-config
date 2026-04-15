@@ -14,4 +14,8 @@
     nvidiaSettings = true;
     package = config.boot.kernelPackages.nvidiaPackages.stable;
   };
+
+  # force nvidia_drm to load early so the render node exists before greetd starts
+  boot.kernelModules = [ "nvidia_drm" ];
+  boot.kernelParams = [ "nvidia-drm.modeset=1" ];
 }

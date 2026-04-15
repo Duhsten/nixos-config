@@ -1,11 +1,9 @@
 # osborne-work — the second machine
-# hardware config lives at /etc/nixos/hardware-configuration.nix on that machine
-# (generated automatically during nixos install, no need to copy it into the repo)
 { ... }:
 
 {
   imports = [
-    /etc/nixos/hardware-configuration.nix
+    ./hardware-configuration.nix
     ../../modules/nvidia.nix
   ];
 

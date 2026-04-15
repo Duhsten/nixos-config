@@ -32,8 +32,18 @@
     LC_TIME           = "en_US.UTF-8";
   };
 
+  # nix-ld — stub dynamic linker so unpatched binaries (e.g. nuget tool binaries,
+  # grpc protoc) can run without patchelf or FHS wrappers
+  programs.nix-ld.enable = true;
+
   # --- networking ---
   networking.networkmanager.enable = true;
+  networking.networkmanager.dns = "systemd-resolved";
+  services.resolved = {
+    enable = true;
+    settings.Resolve.DNSSEC = "false";
+    settings.Resolve.FallbackDNS = [ "1.1.1.1" "8.8.8.8" ];
+  };
   # ssh open so we can hop on remotely
   services.openssh = {
     enable = true;
@@ -79,6 +89,16 @@
     material-symbols
   ];
 
+  fonts.fontconfig = {
+    enable = true;
+    defaultFonts = {
+      sansSerif = [ "Inter" "Noto Sans" ];
+      serif     = [ "Noto Serif" ];
+      monospace = [ "JetBrainsMono Nerd Font" "Noto Sans Mono" ];
+      emoji     = [ "Noto Color Emoji" ];
+    };
+  };
+
   # --- packages ---
   environment.systemPackages = with pkgs; [
     # basics
@@ -103,9 +123,20 @@
     nodejs_20
     codex
     claude-code
-
+    antigravity
+    discord
     # misc
+    linux-wallpaperengine
     bitwarden-cli
+    (with pkgs.dotnetCorePackages; combinePackages [
+      sdk_9_0
+      sdk_10_0
+    ])
+    google-cloud-sdk
+    spotify
+    pwvucontrol
+    blueman
+    bluez
   ];
 
   # steam — needs its own module, not just a package, for the fhs env to work right
