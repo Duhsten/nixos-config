@@ -36,9 +36,15 @@
 
     shellAliases = {
       # nixos shortcuts
-      rebuild = "sudo nixos-rebuild switch --flake ~/nixos-config#osborne-home";
-      update   = "nix flake update --flake ~/nixos-config";
+      rebuild = "sudo nixos-rebuild switch --flake ~/nixos-config#$(hostname)";
+      update   = "nix flake update ~/nixos-config";  # bumps flake.lock to latest
       search   = "nix search nixpkgs";
+
+      # git workflow for the config repo
+      # pull latest changes from github before rebuilding on a machine
+      cfg-pull = "git -C ~/nixos-config pull";
+      # push your changes after editing the config
+      cfg-push = "git -C ~/nixos-config add -A && git -C ~/nixos-config commit -m \"update config\" && git -C ~/nixos-config push";
       # nicer defaults
       ls  = "eza";
       ll  = "eza -l";
@@ -54,6 +60,27 @@
 
   programs.starship.enable = true;
   programs.fzf.enable = true;
+
+  # set zen as the default browser for all the usual url/html stuff
+  xdg.mimeApps = {
+    enable = true;
+    defaultApplications = {
+      "text/html"                = "zen.desktop";
+      "x-scheme-handler/http"   = "zen.desktop";
+      "x-scheme-handler/https"  = "zen.desktop";
+      "x-scheme-handler/about"  = "zen.desktop";
+      "x-scheme-handler/unknown" = "zen.desktop";
+    };
+  };
+
+  # cursor theme — without this x11/xwayland apps show the ugly default x cursor
+  home.pointerCursor = {
+    name = "Adwaita";
+    package = pkgs.adwaita-icon-theme;
+    size = 24;
+    x11.enable = true;
+    gtk.enable = true;
+  };
 
   programs.home-manager.enable = true;
 }

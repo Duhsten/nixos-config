@@ -92,7 +92,6 @@
     ghostty
     vscode
     firefox        # fallback browser, zen is the daily driver
-    steam
     fastfetch
 
     # wayland clipboard + screenshot utils
@@ -108,6 +107,9 @@
     # misc
     bitwarden-cli
   ];
+
+  # steam — needs its own module, not just a package, for the fhs env to work right
+  programs.steam.enable = true;
 
   # no ssh agent, using something else for git auth
   programs.ssh.startAgent = false;

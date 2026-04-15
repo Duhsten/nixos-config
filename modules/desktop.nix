@@ -12,6 +12,21 @@
   # niri — scroll-based wayland compositor, the main one we're using
   programs.niri.enable = true;
 
+  # niri doesn't manage xwayland itself so we use xwayland-satellite
+  # it's a standalone xwayland server that bridges x11 apps (like steam) to wayland
+  programs.xwayland.enable = true;
+  environment.sessionVariables.DISPLAY = ":0";
+
+  systemd.user.services.xwayland-satellite = {
+    description = "xwayland-satellite — x11 bridge for niri";
+    wantedBy = [ "graphical-session.target" ];
+    partOf  = [ "graphical-session.target" ];
+    serviceConfig = {
+      ExecStart = "${pkgs.xwayland-satellite}/bin/xwayland-satellite :0";
+      Restart = "on-failure";
+    };
+  };
+
   # hyprland is here as an option too, pick it from the greeter
   programs.hyprland = {
     enable = true;
