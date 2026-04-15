@@ -1,0 +1,3 @@
+# the old root-level hardware config is no longer used (moved to hosts/<name>/)
+# the leading / anchors this to root only so hosts/*/hardware-configuration.nix gets committed
+/hardware-configuration.nix
