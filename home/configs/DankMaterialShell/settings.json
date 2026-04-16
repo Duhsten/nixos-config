@@ -1,9 +1,9 @@
 {
-  "currentThemeName": "purple",
-  "currentThemeCategory": "generic",
+  "currentThemeName": "dynamic",
+  "currentThemeCategory": "dynamic",
   "customThemeFile": "",
   "registryThemeVariants": {},
-  "matugenScheme": "scheme-tonal-spot",
+  "matugenScheme": "scheme-fidelity",
   "runUserMatugenTemplates": true,
   "matugenTargetMonitor": "",
   "popupTransparency": 1,
@@ -291,8 +291,8 @@
   "dockPosition": 1,
   "dockSpacing": 4,
   "dockBottomGap": 0,
-  "dockMargin": 9,
-  "dockIconSize": 38,
+  "dockMargin": 0,
+  "dockIconSize": 40,
   "dockIndicatorStyle": "circle",
   "dockBorderEnabled": false,
   "dockBorderColor": "surfaceText",
@@ -302,7 +302,7 @@
   "dockLauncherEnabled": true,
   "dockLauncherLogoMode": "os",
   "dockLauncherLogoCustomPath": "",
-  "dockLauncherLogoColorOverride": "primary",
+  "dockLauncherLogoColorOverride": "surface",
   "dockLauncherLogoSizeOffset": 0,
   "dockLauncherLogoBrightness": 0.5,
   "dockLauncherLogoContrast": 1,
@@ -380,11 +380,7 @@
   "displayNameMode": "system",
   "screenPreferences": {},
   "showOnLastDisplay": {},
-  "niriOutputSettings": {
-    "DP-1": {
-      "vrrOnDemand": true
-    }
-  },
+  "niriOutputSettings": {},
   "hyprlandOutputSettings": {},
   "displayProfiles": {},
   "activeDisplayProfile": {},
@@ -420,9 +416,9 @@
         "battery",
         "controlCenterButton"
       ],
-      "spacing": 4,
-      "innerPadding": 4,
-      "bottomGap": 0,
+      "spacing": 8,
+      "innerPadding": -3,
+      "bottomGap": 4,
       "transparency": 1,
       "widgetTransparency": 1,
       "squareCorners": false,
@@ -430,7 +426,7 @@
       "maximizeWidgetIcons": false,
       "maximizeWidgetText": false,
       "removeWidgetPadding": false,
-      "widgetPadding": 8,
+      "widgetPadding": 9,
       "gothCornersEnabled": false,
       "gothCornerRadiusOverride": false,
       "gothCornerRadiusValue": 12,
@@ -533,7 +529,11 @@
   "desktopWidgetGridSettings": {},
   "desktopWidgetInstances": [],
   "desktopWidgetGroups": [],
-  "builtInPluginSettings": {},
+  "builtInPluginSettings": {
+    "dms_settings_search": {
+      "trigger": "?"
+    }
+  },
   "clipboardEnterToPaste": false,
   "launcherPluginVisibility": {},
   "launcherPluginOrder": [],

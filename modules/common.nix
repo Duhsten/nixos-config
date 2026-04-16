@@ -11,7 +11,8 @@
   # using systemd-boot since we're on uefi everywhere
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
-  boot.kernelPackages = pkgs.linuxPackages_latest;
+  # Keep the default stable kernel; latest is a common source of NVIDIA regressions.
+  boot.kernelPackages = pkgs.linuxPackages;
 
   # --- nix ---
   # gotta have flakes and nix-command enabled
@@ -58,12 +59,31 @@
   # --- audio ---
   # pipewire handles everything — alsa, pulse compat, the works
   security.rtkit.enable = true;
+  # Persist low-level ALSA mixer state so hardware mic gain survives reboot.
+  hardware.alsa.enablePersistence = true;
   services.pipewire = {
     enable = true;
     alsa.enable = true;
     alsa.support32Bit = true;
     pulse.enable = true;
   };
+  programs.gamescope = {
+    enable = true;
+    capSysNice = true;
+  };
+  programs.gamemode.enable = true;
+  systemd.services.usb-mic-gain = {
+    description = "Apply USB mic hardware gain";
+    wantedBy = [ "multi-user.target" ];
+    after = [ "sound.target" "systemd-udevd.service" ];
+    serviceConfig = {
+      Type = "oneshot";
+      ExecStart = "${pkgs.alsa-utils}/bin/amixer -c Device sset Mic 15dB cap";
+    };
+  };
+  services.udev.extraRules = ''
+    ACTION=="add", SUBSYSTEM=="sound", KERNEL=="card*", ATTR{id}=="Device", ATTRS{idVendor}=="0d8c", ATTRS{idProduct}=="016c", TAG+="systemd", ENV{SYSTEMD_WANTS}+="usb-mic-gain.service"
+  '';
 
   # --- shell ---
   programs.zsh.enable = true;
@@ -137,6 +157,7 @@
     sushi                       # spacebar quick preview
     gvfs                        # trash, network shares, mtp, smb
     ghostty
+    kitty
     vscode
     firefox        # fallback browser, zen is the daily driver
     fastfetch
@@ -148,6 +169,8 @@
 
     # dev stuff
     nodejs_20
+    rustc
+    cargo
     codex
     claude-code
     antigravity
@@ -161,6 +184,9 @@
     ])
     google-cloud-sdk
     spotify
+    alsa-utils
+    mangohud
+    pavucontrol
     pwvucontrol
     gemini-cli
     

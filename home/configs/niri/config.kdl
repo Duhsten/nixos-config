@@ -188,6 +188,7 @@ overview {
 // This line starts waybar, a commonly used bar for Wayland compositors.
 environment {
   XDG_CURRENT_DESKTOP "niri"
+  DISPLAY ":0"
 }
 hotkey-overlay {
     skip-at-startup
@@ -260,6 +261,10 @@ window-rule {
     open-floating true
 }
 window-rule {
+    match app-id=r#"^com\.saivert\.pwvucontrol$"#
+    open-floating true
+}
+window-rule {
     match app-id=r#"^steam$"# title=r#"^notificationtoasts_\d+_desktop$"#
     default-floating-position x=10 y=10 relative-to="bottom-right"
     open-focused false
@@ -304,3 +309,8 @@ include "dms/alttab.kdl"
 include "dms/binds.kdl"
 include "dms/outputs.kdl"
 include "dms/cursor.kdl"
+
+// Local overrides that should survive DMS regenerating its include files.
+binds {
+    Mod+E { spawn "nautilus"; }
+}

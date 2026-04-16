@@ -6,6 +6,15 @@
   services.xserver.videoDrivers = [ "nvidia" ];
   hardware.graphics.enable = true;
 
+  # run ollama against CUDA on NVIDIA hosts and keep the CLI available in PATH
+  services.ollama = {
+    enable = true;
+    package = pkgs.ollama-cuda;
+  };
+  environment.systemPackages = with pkgs; [
+    ollama-cuda
+  ];
+
   hardware.nvidia = {
     # modesetting is basically required for wayland to not be a disaster
     modesetting.enable = true;

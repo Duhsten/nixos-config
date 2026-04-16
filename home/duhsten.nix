@@ -18,6 +18,7 @@
     htop
     tree
     unzip
+    xwayland-satellite
   ];
 
   # --- git ---
@@ -61,10 +62,6 @@
   programs.starship.enable = true;
   programs.fzf.enable = true;
 
-  # xwayland-satellite listens on :0 — set DISPLAY so x11 apps find it
-  # kept here (user-scoped) so greetd's PAM session doesn't inherit it and confuse niri
-  home.sessionVariables.DISPLAY = ":0";
-
   # npm global installs go to ~/.npm-global so they don't try to write to the nix store
   home.sessionVariables.NPM_CONFIG_PREFIX = "$HOME/.npm-global";
   home.sessionPath = [ "$HOME/.npm-global/bin" ];
@@ -89,6 +86,25 @@
     size = 24;
     x11.enable = true;
     gtk.enable = true;
+  };
+
+  # Start xwayland-satellite only for Niri sessions. This keeps Steam and other
+  # X11 apps working in Niri without leaking the bridge into Hyprland.
+  systemd.user.services.xwayland-satellite = {
+    Unit = {
+      Description = "Xwayland outside your Wayland";
+      BindsTo = "graphical-session.target";
+      PartOf = "graphical-session.target";
+      After = "graphical-session.target";
+      Requisite = "graphical-session.target";
+    };
+    Service = {
+      Type = "notify";
+      NotifyAccess = "all";
+      ExecStart = "${pkgs.xwayland-satellite}/bin/xwayland-satellite";
+      StandardOutput = "journal";
+    };
+    Install.WantedBy = [ "niri.service" ];
   };
 
   programs.home-manager.enable = true;
